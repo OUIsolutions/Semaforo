@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
     parser.run_and_exit_if_error();
 
     const char *storage_c = storage.c_str();
-    cout << "action " << action <<"\n";
+    cout << "action " << action << "|"<< "\n";
 
     if(
             action != RESSET_STORAGE &&
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
     parser.set_optional<int>(WAIT_SHORT, WAIT_LONG, DEFAULT_TIME, WAIT_DESCRIPTION);
     parser.run_and_exit_if_error();
 
-    //auto will be int
+
     int timeout = parser.get<int>(TIMEOUT_SHORT);
     int wait = parser.get<int>(WAIT_SHORT);
 
