@@ -1,12 +1,16 @@
 using namespace std;
 
+
 #include "imports.hpp"
+DtwNamespace  dtw;
+
 #include "declaration.hpp"
 #include "definition.hpp"
 
 
 int main(int argc, char *argv[]){
     cli::Parser parser(argc, argv);
+    dtw = newDtwNamespace();
 
     parser.set_optional<int>(TIMEOUT_SHORT, TIMEOUT_LONG, DEFAULT_TIME, TIMEOUT_DESCRIPTION);
     parser.set_optional<int>(WAIT_SHORT, WAIT_LONG, DEFAULT_TIME, WAIT_DESCRIPTION);
@@ -18,7 +22,15 @@ int main(int argc, char *argv[]){
     int wait = parser.get<int>(WAIT_SHORT);
     string storage = parser.get<string>(STORAGE_SHORT);
 
-    LockedEntity e = LockedEntity("aaa",10,20);
 
-    cout << e << "\n";
+    //verify if its available to lock
+
+    //lock the .json
+
+    //verify again
+    //lock file
+
+
+
+
 }
