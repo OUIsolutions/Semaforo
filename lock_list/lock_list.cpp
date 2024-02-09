@@ -33,8 +33,11 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
     }
 
     long size = chash.get_size(parsed);
+    long now = time(nullptr);
     for(int i = 0; i < size; i++){
         CHashObject * current = chash.array.getObject(parsed,i);
+        char *current_entity = chash.object.getString(current,ENTITY_KEY);
+        long expiration = (long)chash.object.getNumber(current,EXPIRATION_KEY);
 
         CHash_catch(current){
             char *error_message = chash.get_error_menssage(parsed);
@@ -43,15 +46,15 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
             throw error;
         }
 
+        if(now > expiration){
+            continue;
+        }
+
 
 
     }
+    chash.free(parsed);
     return result;
 
 
-
-
-
-
-    return  result;
 }

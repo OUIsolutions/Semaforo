@@ -1,10 +1,9 @@
 
 class LockedEntity{
     string entity;
-    long locked_time;
-    int timeout;
+    long expiration;
 public:
-    LockedEntity(const char * entity,long locked_time,int timeout);
+    LockedEntity(const char * entity,long expiration);
 
     friend ostream& operator<<(ostream& os, const LockedEntity& a);
 
