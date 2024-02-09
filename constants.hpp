@@ -39,6 +39,6 @@ const int LOCKED_BY_OTHER_PROCESS  =1;
 const int INVALID_ARGUMENTS = 2;
 
 const int STORAGE_FILE_UNFORMATED =  3;
-const char *ENTITY_NOT_PROVIDED = "entity not provided";
+const char *ENTITY_NOT_PROVIDED = "entity not provided\n";
 const char * LOCK_FILE_ITS_A_FOLDER  = "lock file it a folder";
 const char *UNEXPECTED_ERROR = "unexpected error";

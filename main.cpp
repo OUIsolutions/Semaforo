@@ -30,9 +30,9 @@ int main(int argc, char *argv[]){
     const char *storage_c = storage.c_str();
 
     if(
-            action != RESSET_STORAGE &&
-            action != UNLOCK_ACTION &&
-            action != LOCK_ACTION){
+        action != RESSET_STORAGE &&
+        action != UNLOCK_ACTION &&
+        action != LOCK_ACTION){
         cout << INVALID_ACTION_MESSAGE << "\n";
         return INVALID_ARGUMENTS;
     }
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 
 
     string entity = parser.get<string>(ENTITY_SHORT);
-    if(entity == ""){
+    if(entity.empty()){
         cout << ENTITY_NOT_PROVIDED;
         return INVALID_ARGUMENTS;
     }

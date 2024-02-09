@@ -27,7 +27,7 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
     CHash_catch(parsed){
 
         char *error_message = chash.get_error_menssage(parsed);
-        auto *error =  new runtime_error(error_message);
+        auto error =  runtime_error(error_message);
         CHash_free(parsed);
         throw error;
     }

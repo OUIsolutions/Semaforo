@@ -14,11 +14,11 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
         locked_list = parse_locked_file(storage_file);
 
     }
-    catch (runtime_error &error){
-        cout << error.what() << endl;
-        return STORAGE_FILE_UNFORMATED;
+    catch (const std::exception& e) {
+        // Capturando e tratando a exceção
+        std::cerr << "Exceção capturada: " << e.what() << std::endl;
+        return OK;
     }
-
 
     return OK;
 }
