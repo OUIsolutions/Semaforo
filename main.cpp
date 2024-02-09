@@ -54,9 +54,8 @@ int main(int argc, char *argv[]){
     parser.set_optional<int>(WAIT_SHORT, WAIT_LONG, DEFAULT_TIME, WAIT_DESCRIPTION);
     parser.run_and_exit_if_error();
 
-
     int timeout = parser.get<int>(TIMEOUT_SHORT);
     int wait = parser.get<int>(WAIT_SHORT);
 
-
+    return lock_entity(storage_c,entity_in_c,wait,timeout);
 }
