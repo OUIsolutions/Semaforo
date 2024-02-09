@@ -36,8 +36,9 @@ const char *INVALID_ACTION_MESSAGE = "invalid action";
 
 const int OK = 0;
 const int LOCKED_BY_OTHER_PROCESS  =1;
-const int INVALID_ACTION = 2;
-const int STORAGE_FILE_UNFORMATED =  3;
+const int INVALID_ARGUMENTS = 2;
 
+const int STORAGE_FILE_UNFORMATED =  3;
+const char *ENTITY_NOT_PROVIDED = "entity not provided";
 const char * LOCK_FILE_ITS_A_FOLDER  = "lock file it a folder";
 const char *UNEXPECTED_ERROR = "unexpected error";
