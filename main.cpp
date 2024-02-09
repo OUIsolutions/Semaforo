@@ -11,8 +11,8 @@ DtwNamespace  dtw;
 int main(int argc, char *argv[]){
     cli::Parser parser(argc, argv);
     dtw = newDtwNamespace();
-    cout << "aaaaaaaaa" << "\n";
-    
+
+
     parser.set_required<string>(ACTION_SHORT, ACTION_LONG, ACTION_DESCRIPTION);
     parser.set_optional<string>(STORAGE_SHORT, STORAGE_LONG, DEFAULT_STORAGE_FILE, STORAGE_DESCRIPTION);
     string storage = parser.get<string>(STORAGE_SHORT);
@@ -20,12 +20,12 @@ int main(int argc, char *argv[]){
     parser.run_and_exit_if_error();
 
     const char *storage_c = storage.c_str();
+    cout << "action " << action <<"\n";
 
     if(
-             action != RESSET_STORAGE &&
-             action != UNLOCK_ACTION &&
-             action != LOCK_ACTION
-            ){
+            action != RESSET_STORAGE &&
+            action != UNLOCK_ACTION &&
+            action != LOCK_ACTION){
         cout << INVALID_ACTION_MESSAGE << "\n";
         return INVALID_ACTION;
     }
