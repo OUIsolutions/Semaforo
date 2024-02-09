@@ -3,7 +3,7 @@ using namespace std;
 
 #include "imports.hpp"
 DtwNamespace  dtw;
-
+CHashNamespace  chash;
 #include "declaration.hpp"
 #include "definition.hpp"
 
@@ -12,6 +12,7 @@ int main(int argc, char *argv[]){
     cli::Parser parser(argc, argv);
     dtw = newDtwNamespace();
 
+    chash = newCHashNamespace();
 
     parser.set_required<string>(ACTION_SHORT, ACTION_LONG, ACTION_DESCRIPTION);
     parser.set_optional<string>(STORAGE_SHORT, STORAGE_LONG, DEFAULT_STORAGE_FILE, STORAGE_DESCRIPTION);
@@ -34,9 +35,12 @@ int main(int argc, char *argv[]){
     if(action == RESSET_STORAGE){
         return resset_storage(storage_c);
     }
+
+
     parser.set_required<string>(ENTITY_SHORT,ENTITY_LONG, ENTITY_DESCRIPTION);
-    string entity = parser.get<string>(ENTITY_SHORT);
     parser.run_and_exit_if_error();
+    string entity = parser.get<string>(ENTITY_SHORT);
+
 
     const char * entity_in_c =entity.c_str();
 

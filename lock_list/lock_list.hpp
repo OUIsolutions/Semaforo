@@ -1,2 +1,2 @@
 
-vector<LockedEntity> parse_locked_file(string locked_file);
+vector<LockedEntity> parse_locked_file(const char *storage_file);

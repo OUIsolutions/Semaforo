@@ -4,15 +4,26 @@
 
 int resset_storage(const char *storage_file){
     dtw.remove_any(storage_file);
-    return 0;
+    return OK;
 }
 
 
 int lock_entity(const char *storage_file, const char *entity,int max_wait,int timeout){
-    return 0;
+    vector<LockedEntity> locked_list;
+    try{
+        locked_list = parse_locked_file(storage_file);
+
+    }
+    catch (runtime_error &error){
+        cout << error.what() << endl;
+        return STORAGE_FILE_UNFORMATED;
+    }
+
+
+    return OK;
 }
 
 
 int unlock_entity(const char *storage_file,const char *entity){
-    return 0;
+    return OK;
 }
