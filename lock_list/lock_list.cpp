@@ -9,7 +9,7 @@ vector<LockedEntity> parse_locked_file(string &locked_file){
     if(entity == DTW_NOT_FOUND){
         return result;
     }
-    
+
 
     return  result;
 }
