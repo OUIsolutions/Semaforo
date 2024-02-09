@@ -6,5 +6,7 @@ class LockedEntity{
 public:
     LockedEntity(const char * entity,long locked_time,int timeout);
 
+    friend ostream& operator<<(ostream& os, const LockedEntity& a);
 
 };
+

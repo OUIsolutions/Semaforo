@@ -20,5 +20,5 @@ int main(int argc, char *argv[]){
 
     LockedEntity e = LockedEntity("aaa",10,20);
 
-
+    cout << e << "\n";
 }
