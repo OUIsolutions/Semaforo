@@ -1,9 +1,9 @@
+using namespace std;
 
 #include "imports.hpp"
 #include "declaration.hpp"
 #include "definition.hpp"
 
-using namespace std;
 
 int main(int argc, char *argv[]){
     cli::Parser parser(argc, argv);
@@ -17,6 +17,8 @@ int main(int argc, char *argv[]){
     int timeout = parser.get<int>(TIMEOUT_SHORT);
     int wait = parser.get<int>(WAIT_SHORT);
     string storage = parser.get<string>(STORAGE_SHORT);
+
+    LockedEntity e = LockedEntity("aaa",10,20);
 
 
 }

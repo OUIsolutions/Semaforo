@@ -3,7 +3,7 @@ const char *TIMEOUT_DESCRIPTION = "max time that current process can be with the
 
 
 const char * TIMEOUT_LONG = "timeout";
-const int DEFAULT_TIME 60;
+const int DEFAULT_TIME =60;
 
 
 
