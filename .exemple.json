@@ -1,0 +1,12 @@
+[
+    {
+        "entity":"a",
+        "locked-time":0.0,
+        "timeout":0.1
+    },
+    {
+        "entity":"a/a.txt",
+        "locked-time":0.0,
+        "timeout":0.1
+    }
+]
