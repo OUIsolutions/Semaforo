@@ -32,6 +32,20 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
         throw error;
     }
 
+    long size = chash.get_size(parsed);
+    for(int i = 0; i < size; i++){
+        CHashObject * current = chash.array.getObject(parsed,i);
+
+        CHash_catch(current){
+            char *error_message = chash.get_error_menssage(parsed);
+            auto error =  runtime_error(error_message);
+            CHash_free(parsed);
+            throw error;
+        }
+
+
+
+    }
     return result;
 
 

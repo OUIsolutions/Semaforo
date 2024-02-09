@@ -1,5 +1,5 @@
 #include "globals.hpp"
-#include "constants.hpp"
+#include "constants/all.hpp"
 #include "lock_entity/lock_entity.hpp"
 #include "lock_list/lock_list.hpp"
 #include "actions/actions.hpp"
