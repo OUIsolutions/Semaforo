@@ -24,6 +24,7 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
 
         //means its able to lock here
         DtwLocker *locker  = dtw.locker.newLocker();
+        locker->total_checks = TOTAL_CHECKS;
         dtw.locker.lock(locker,storage_file);
 
         vector<LockedEntity> locked_list;
@@ -63,6 +64,7 @@ int unlock_entity(const char *storage_file,const char *entity){
 
     //means its able to lock here
     DtwLocker *locker  = dtw.locker.newLocker();
+    locker->total_checks = TOTAL_CHECKS;
     dtw.locker.lock(locker,storage_file);
 
     vector<LockedEntity> final_locker;
@@ -75,7 +77,7 @@ int unlock_entity(const char *storage_file,const char *entity){
         dtw.locker.free(locker);
         return INVALID_STORAGE_FILE;
     }
-    
+
     long position = get_entity_position(final_locker,entity);
     if(position == NOT_FOUND){
         dtw.locker.free(locker);
