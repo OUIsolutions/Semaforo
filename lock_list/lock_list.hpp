@@ -1,5 +1,5 @@
 
-vector<LockedEntity> parse_locked_file(const char *storage_file);
+vector<LockedEntity> parse_locked_file(const char *storage_file,bool ignore_expired=true);
 
 void save_locked_list(vector<LockedEntity> &listage,const char *storage_file);
 

@@ -1,6 +1,6 @@
 
 
-vector<LockedEntity> parse_locked_file(const char *storage_file){
+vector<LockedEntity> parse_locked_file(const char *storage_file,bool ignore_expired){
 
     vector<LockedEntity> result;
 
@@ -46,9 +46,12 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
             throw error;
         }
 
-        if(now <= expiration){
-            result.emplace_back(current_entity, expiration);
+
+        if(now >= expiration && ignore_expired){
+            continue;
         }
+
+        result.emplace_back(current_entity, expiration);
 
     }
     chash.free(parsed);

@@ -75,14 +75,16 @@ int unlock_entity(const char *storage_file,const char *entity){
     vector<LockedEntity> first_locked_list;
 
     try{
-        first_locked_list = parse_locked_file(storage_file);
+        first_locked_list = parse_locked_file(storage_file,false);
     }
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
         cerr  << e.what() << endl;
         return INVALID_STORAGE_FILE;
     }
+
     long position = get_entity_position(first_locked_list,entity);
+    cout << position << "\n";
     if(position == NOT_FOUND){
         return  OK;
     }
@@ -93,7 +95,7 @@ int unlock_entity(const char *storage_file,const char *entity){
 
     vector<LockedEntity> final_locker;
     try{
-        final_locker = parse_locked_file(storage_file);
+        final_locker = parse_locked_file(storage_file,false);
     }
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
