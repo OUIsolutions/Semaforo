@@ -11,6 +11,9 @@ int resset_storage(const char *storage_file){
 int lock_entity(const char *storage_point, const char *entity, int max_wait, int timeout){
     long start = time(nullptr);
     bool first = true;
+    string real_stored_file = format_real_point(storage_point);
+    const char *real_stored_file_c =  real_stored_file.c_str();
+
     while (true){
         long now = time(nullptr);
 
@@ -21,25 +24,17 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         }
 
         first = false;
-
-        srand(getpid() + time(NULL));
-        // Generating random number between 0-10
-        int sorted_mirror = rand() % 11;
-
-
-
-
-
+        
 
         //means its able to lock here
         DtwLocker *locker  = dtw.locker.newLocker();
         locker->total_checks = TOTAL_CHECKS;
 
-        dtw.locker.lock(locker, storage_point);
+        dtw.locker.lock(locker, real_stored_file_c);
 
         vector<LockedEntity> locked_list;
         try{
-            locked_list = parse_locked_file(storage_point);
+            locked_list = parse_locked_file(real_stored_file_c);
         }
         catch (const std::exception& e) {
             // Capturando e tratando a exceção
@@ -59,7 +54,7 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         now = time(nullptr);
         long expiration = now + timeout;
         locked_list.emplace_back(entity, expiration);
-        save_locked_list(locked_list, storage_point);
+        save_locked_list(locked_list, real_stored_file_c);
         dtw.locker.free(locker);
 
         return OK;
