@@ -45,8 +45,6 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
             return INVALID_STORAGE_FILE;
         }
 
-
-
         //verify again after the storage has ben locked
         if(!its_able_to_lock(locked_list, entity)){
             dtw.locker.free(locker);

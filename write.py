@@ -1,22 +1,45 @@
 from os import system
 from multiprocessing import Process, Queue
-
-def my_function(x):
- 
-    system('./a.out --action lock --entity a.txt')
-    with open('teste.txt','r') as arq:
-        result = arq.read()
+from os import system
+import requests
+import json
+from os import makedirs
 
 
-    with open('teste.txt','w') as arq:
-        arq.write(result + x + "\n")
-    system('./a.out --action unlock --entity a.txt')
+def cap_url(worker_id):
+    system('./a.out --action lock --entity new_teste.json')
+    with open('new_teste.json','r') as arq:
+        result = json.loads(arq.read())
 
+    for url in result:
+        retorno = system(f'./a.out -w 0 --action lock --entity {url}')
+        
+        if retorno == 0:
+            system('./a.out -w 0 --action unlock --entity new_teste.json')
 
+            response = requests.get(url)
+            print(f"worker: {worker_id} Url: {url} Status: {response.status_code}")
+            filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
+            with open(filename,'w') as arq:
+                arq.write(response.text)
 
-with open('teste.txt','w') as arq:
-    arq.write('')
+            system('./a.out --action lock --entity new_teste.json')
+
+            #removendo a url
+            with open('new_teste.json','r') as arq:
+                urls = json.load(arq)
+                urls.remove(url)
+            with open('new_teste.json','w') as arq:
+                json.dump(urls, arq)
+
+            system('./a.out --action unlock --entity new_teste.json')
+
+            system(f'./a.out -w 0 --action unlock --entity {url}')
     
-for x in range(0,50):
-    p = Process(target=my_function, args=(f'{x}',))
-    p.start()
+
+makedirs('result',exist_ok=True)
+cap_url(1)
+
+'''for x in range(0,10):
+    p = Process(target=cap_url, args=(str(x),))
+    p.start()'''
