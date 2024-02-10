@@ -28,7 +28,11 @@ bool  LockedEntity::is_parent(const char *entity){
 
 ostream& operator<<(ostream& os, const LockedEntity &l){
     os << "entity:" << l.entity << "\n";
-    os << "expiration:" << dtw.convert_unix_time_to_string(l.expiration)<< "\n";
-    return os;
+
+    char *conversion =  dtw_convert_unix_time_to_string(l.expiration);
+    os << "expiration:" <<conversion << "\n";
+    free(conversion);
+
+     return os;
 }
 

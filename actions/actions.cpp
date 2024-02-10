@@ -20,28 +20,15 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
         }
 
         first = false;
-        vector<LockedEntity> first_locked_list;
 
-        try{
-            first_locked_list = parse_locked_file(storage_file);
-        }
-        catch (const std::exception& e) {
-            // Capturando e tratando a exceção
-            cerr  << e.what() << endl;
-            return INVALID_STORAGE_FILE;
-        }
-
-        if(!its_able_to_lock(first_locked_list,entity)){
-            continue;
-        }
 
         //means its able to lock here
         DtwLocker *locker  = dtw.locker.newLocker();
         dtw.locker.lock(locker,storage_file);
 
-        vector<LockedEntity> final_locker;
+        vector<LockedEntity> locked_list;
         try{
-            final_locker = parse_locked_file(storage_file);
+            locked_list = parse_locked_file(storage_file);
         }
         catch (const std::exception& e) {
             // Capturando e tratando a exceção
@@ -53,15 +40,15 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
 
 
         //verify again after the storage has ben locked
-        if(!its_able_to_lock(final_locker,entity)){
+        if(!its_able_to_lock(locked_list, entity)){
             dtw.locker.free(locker);
             continue;
         }
 
         now = time(nullptr);
         long expiration = now + timeout;
-        final_locker.emplace_back(entity, expiration);
-        save_locked_list(final_locker, storage_file);
+        locked_list.emplace_back(entity, expiration);
+        save_locked_list(locked_list, storage_file);
         dtw.locker.free(locker);
 
         return OK;
@@ -72,22 +59,7 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
 
 int unlock_entity(const char *storage_file,const char *entity){
 
-    vector<LockedEntity> first_locked_list;
 
-    try{
-        first_locked_list = parse_locked_file(storage_file,false);
-    }
-    catch (const std::exception& e) {
-        // Capturando e tratando a exceção
-        cerr  << e.what() << endl;
-        return INVALID_STORAGE_FILE;
-    }
-
-    long position = get_entity_position(first_locked_list,entity);
-    cout << position << "\n";
-    if(position == NOT_FOUND){
-        return  OK;
-    }
 
     //means its able to lock here
     DtwLocker *locker  = dtw.locker.newLocker();
@@ -95,7 +67,7 @@ int unlock_entity(const char *storage_file,const char *entity){
 
     vector<LockedEntity> final_locker;
     try{
-        final_locker = parse_locked_file(storage_file,false);
+        final_locker = parse_locked_file(storage_file);
     }
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
@@ -103,7 +75,8 @@ int unlock_entity(const char *storage_file,const char *entity){
         dtw.locker.free(locker);
         return INVALID_STORAGE_FILE;
     }
-    position = get_entity_position(final_locker,entity);
+    
+    long position = get_entity_position(final_locker,entity);
     if(position == NOT_FOUND){
         dtw.locker.free(locker);
         return  OK;

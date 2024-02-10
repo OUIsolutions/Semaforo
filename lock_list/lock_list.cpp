@@ -1,24 +1,22 @@
 
 
-vector<LockedEntity> parse_locked_file(const char *storage_file,bool ignore_expired){
+vector<LockedEntity> parse_locked_file(const char *storage_file){
 
     vector<LockedEntity> result;
 
-    int entity  = dtw.entity_type(storage_file);
     string error;
-    if(entity == DTW_NOT_FOUND){
-        return result;
-    }
-
-    if(entity == DTW_FOLDER_TYPE){
-        error = LOCK_FILE_ITS_A_FOLDER;
-        throw runtime_error(error);
-    }
 
     char *content =  dtw.load_string_file_content(storage_file);
+
     if(!content){
-        error = UNEXPECTED_ERROR;
-        throw runtime_error(error);
+        int entity  = dtw.entity_type(storage_file);
+
+        if(entity == DTW_FOLDER_TYPE){
+            error = LOCK_FILE_ITS_A_FOLDER;
+            throw runtime_error(error);
+        }
+
+        return result;
     }
 
     CHashArray *parsed = chash.load_from_json_strimg(content);
@@ -47,11 +45,10 @@ vector<LockedEntity> parse_locked_file(const char *storage_file,bool ignore_expi
         }
 
 
-        if(now >= expiration && ignore_expired){
-            continue;
+        if(now <= expiration){
+            result.emplace_back(current_entity, expiration);
         }
 
-        result.emplace_back(current_entity, expiration);
 
     }
     chash.free(parsed);
