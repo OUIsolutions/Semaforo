@@ -89,7 +89,9 @@ void save_locked_list(vector<LockedEntity> &listage,const char *storage_file){
     }
 
 #ifdef DEBUG
-    chash.dump_to_json_file(result,storage_file);
+    char *json_result = chash.dump_to_json_string(result);
+    dtw.write_string_file_content(json_result,storage_file);
+    free(json_result);
 #else
     cJSON *parsed_cjson = chash.dump_to_cJSON(result);
     char *unidented = cJSON_PrintUnformatted(parsed_cjson);

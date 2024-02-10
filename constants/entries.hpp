@@ -22,7 +22,7 @@ const char * STORAGE_SHORT = "s";
 const char * STORAGE_LONG = "storage";
 const char  *STORAGE_DESCRIPTION = "the entity locks json to control what its been locked";
 
-const char * DEFAULT_STORAGE_FILE = ".lock.json";
+const char * DEFAULT_STORAGE_POINT = ".lock";
 
 
 const char *LOCK_ACTION = "lock";
