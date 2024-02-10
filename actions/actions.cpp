@@ -22,6 +22,9 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
     }
 
 
+    a/a.txt
+
+
     long now = time(nullptr);
     long expiration = now + timeout;
     locked_list.emplace_back(entity,expiration);
