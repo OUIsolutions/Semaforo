@@ -50,11 +50,35 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
             continue;
         }
 
-
-
     }
     chash.free(parsed);
     return result;
+
+
+}
+
+void save_locked_list(vector<LockedEntity> listage,const char *storage_file){
+    CHashArray *result = newCHashArrayEmpty();
+
+    for(auto& entity : listage) {
+        CHashArray_append(result, newCHashObject(
+            ENTITY_KEY,chash.newString(entity.entity.c_str()),
+            EXPIRATION_KEY,chash.newNumber(entity.expiration)
+        ));
+    }
+
+#ifdef DEBUG
+    chash.dump_to_json_file(result,storage_file);
+#else
+    cJSON *parsed_cjson = chash.dump_to_cJSON(result);
+    char *unidented = cJSON_PrintUnformatted(parsed_cjson);
+    dtw.write_string_file_content(storage_file,unidented);
+    cJSON_Delete(parsed_cjson);
+    free(unidented);
+#endif
+
+
+    chash.free(result);
 
 
 }

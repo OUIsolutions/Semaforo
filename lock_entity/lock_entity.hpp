@@ -1,5 +1,6 @@
 
 class LockedEntity{
+public:
     string entity;
     long expiration;
 public:
