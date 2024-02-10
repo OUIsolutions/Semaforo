@@ -15,6 +15,11 @@ int main(int argc, char *argv[]){
 
     chash = newCHashNamespace();
 
+    DtwLocker *t = dtw.locker.newLocker();
+    dtw.locker.lock(t,"b.txt");
+    dtw.locker.lock(t,"b.txt");
+    dtw.locker.free(t);
+    return 0;
     parser.set_required<string>(ACTION_SHORT, ACTION_LONG, ACTION_DESCRIPTION);
     parser.set_optional<string>(STORAGE_SHORT, STORAGE_LONG, DEFAULT_STORAGE_POINT, STORAGE_DESCRIPTION);
     parser.set_optional<int>(TIMEOUT_SHORT, TIMEOUT_LONG, DEFAULT_TIME, TIMEOUT_DESCRIPTION);

@@ -19,7 +19,6 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
     while (true){
         long now = time(nullptr);
 
-
         if(start + max_wait <= now && !first){
             cout << FILE_ITS_ALREADY_LOCKED << "\n";
             return FILE_ITS_ALREADY_LOCKED_CODE;
@@ -27,12 +26,16 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
 
         first = false;
         DtwLocker *locker  = dtw.locker.newLocker();
+        //means its able to lock here
+        locker->total_checks = TOTAL_CHECKS;
         vector<LockedEntity> test_locked_list;
         string random_mirror = get_random_mirror_path(storage_point);
         dtw.locker.lock(locker,random_mirror.c_str());
+
         try{
            test_locked_list = parse_locked_file(random_mirror.c_str());
         }
+
         catch (const std::exception& e) {
             // Capturando e tratando a exceção
             cerr  << e.what() << endl;
@@ -44,10 +47,6 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
             dtw.locker.free(locker);
             continue;
         }
-
-
-        //means its able to lock here
-        locker->total_checks = TOTAL_CHECKS;
         dtw.locker.lock(locker, real_stored_file_c);
 
         vector<LockedEntity> locked_list;
