@@ -20,6 +20,7 @@ def cap_url(worker_id):
             response = requests.get(url)
             print(f"worker: {worker_id} Url: {url} Status: {response.status_code}")
             filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
+            
             with open(filename,'w') as arq:
                 arq.write(response.text)
 
