@@ -17,14 +17,15 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
     }
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
-        std::cerr  << e.what() << std::endl;
+        cerr  << e.what() << endl;
         return INVALID_STORAGE_FILE;
     }
 
-    long now = time(nullptr);
-    locked_list.push_back(LockedEntity(entity,now + timeout));
-    save_locked_list(locked_list,storage_file);
 
+    long now = time(nullptr);
+    long expiration = now + timeout;
+    locked_list.emplace_back(entity,expiration);
+    save_locked_list(locked_list,storage_file);
 
 
     return OK;

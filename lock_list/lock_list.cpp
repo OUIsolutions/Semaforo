@@ -46,8 +46,8 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
             throw error;
         }
 
-        if(now > expiration){
-            continue;
+        if(now < expiration){
+            result.emplace_back(current_entity, expiration);
         }
 
     }
