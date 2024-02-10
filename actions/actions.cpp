@@ -26,6 +26,7 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
         DtwLocker *locker  = dtw.locker.newLocker();
         locker->max_wait = max_wait;
         locker->total_checks = TOTAL_CHECKS;
+        locker->fail_delay =MAX_DELAY;
         if(dtw.locker.lock(locker,storage_file) == DTW_LOCKER_WAIT_ERROR){
             cout << FILE_ITS_ALREADY_LOCKED << "\n";
             dtw.locker.free(locker);
