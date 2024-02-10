@@ -57,7 +57,7 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
 
 }
 
-void save_locked_list(vector<LockedEntity> listage,const char *storage_file){
+void save_locked_list(vector<LockedEntity> &listage,const char *storage_file){
     CHashArray *result = newCHashArrayEmpty();
 
     for(auto& entity : listage) {
@@ -81,4 +81,10 @@ void save_locked_list(vector<LockedEntity> listage,const char *storage_file){
     chash.free(result);
 
 
+}
+void print_locked_list(vector<LockedEntity> &listage){
+    for(auto& entity : listage) {
+        cout << entity;
+        cout << "--------------------------------\n";
+    }
 }
