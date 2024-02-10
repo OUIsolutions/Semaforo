@@ -4,43 +4,52 @@ from os import system
 import requests
 import json
 from os import makedirs
-
+from os.path import isfile
 
 def cap_url(worker_id):
-    system('./a.out --action lock --entity new_teste.json')
-    with open('new_teste.json','r') as arq:
-        result = json.loads(arq.read())
+    while True:
+        system('./a.out --action lock --entity new_teste.json')
+        with open('new_teste.json','r') as arq:
+            result = json.loads(arq.read())
 
-    for url in result:
-        retorno = system(f'./a.out -w 0 --action lock --entity {url}')
-        
-        if retorno == 0:
-            system('./a.out -w 0 --action unlock --entity new_teste.json')
-
-            response = requests.get(url)
-            print(f"worker: {worker_id} Url: {url} Status: {response.status_code}")
-            filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
+        for url in result:
             
-            with open(filename,'w') as arq:
-                arq.write(response.text)
+            retorno = system(f'./a.out -w 0 --action lock --entity {url}')
+            
+            if retorno == 0:
+                system('./a.out --action unlock --entity new_teste.json')
 
-            system('./a.out --action lock --entity new_teste.json')
+                response = requests.get(url)
+                print(f"worker: {worker_id} Url: {url} Status: {response.status_code}")
+                filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
 
-            #removendo a url
-            with open('new_teste.json','r') as arq:
-                urls = json.load(arq)
-                urls.remove(url)
-            with open('new_teste.json','w') as arq:
-                json.dump(urls, arq)
+                with open(filename,'w') as arq:
+                    arq.write(response.text)
 
-            system('./a.out --action unlock --entity new_teste.json')
+                system('./a.out --action lock --entity new_teste.json')
 
-            system(f'./a.out -w 0 --action unlock --entity {url}')
-    
+                #removendo a url
+                with open('new_teste.json','r') as arq:
+                    result = json.load(arq)
+                    result.remove(url)
+
+                with open('new_teste.json','w') as arq:
+                    json.dump(result, arq)
+
+
+
+                system(f'./a.out -w 0 --action unlock --entity {url}')
+     
+
+        
+        system('./a.out --action unlock --entity new_teste.json')
+        
+
+if not isfile('new_teste.json'):
+    with open('new_teste.json','w') as arq:
+        arq.write('[]')
 
 makedirs('result',exist_ok=True)
-cap_url(1)
-
-'''for x in range(0,10):
+for x in range(0,2):
     p = Process(target=cap_url, args=(str(x),))
-    p.start()'''
+    p.start()
