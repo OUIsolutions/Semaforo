@@ -18,10 +18,15 @@ def cap_url(worker_id):
             
             if retorno == 0:
                 system('./a.out --action unlock --entity new_teste.json')
+                filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
 
+                #means it already get
+                if(isfile(filename)):
+                    system('./a.out --action lock --entity new_teste.json')
+                    continue
+                
                 response = requests.get(url)
                 print(f"worker: {worker_id} Url: {url} Status: {response.status_code}")
-                filename = f'result/{url.replace(" ", "").replace("/", "")}.json';
 
                 with open(filename,'w') as arq:
                     arq.write(response.text)
@@ -30,7 +35,9 @@ def cap_url(worker_id):
 
                 #removendo a url
                 with open('new_teste.json','r') as arq:
-                    result = json.load(arq)
+                    result:list = json.load(arq)
+
+                
                     result.remove(url)
 
                 with open('new_teste.json','w') as arq:
