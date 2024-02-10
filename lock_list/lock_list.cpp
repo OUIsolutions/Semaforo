@@ -46,7 +46,7 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
             throw error;
         }
 
-        if(now < expiration){
+        if(now <= expiration){
             result.emplace_back(current_entity, expiration);
         }
 
@@ -56,6 +56,18 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
 
 
 }
+
+long get_entity_position(vector<LockedEntity> &listage,const char *entity){
+    for(long i = 0; i <  listage.size(); i++){
+        LockedEntity current = listage[i];
+        if (current.entity == entity) {
+            return i;
+        }
+    }
+    return NOT_FOUND;
+
+}
+
 bool its_able_to_lock(vector<LockedEntity> &listage,const char *entity){
 
     for(auto& current_entity : listage) {
