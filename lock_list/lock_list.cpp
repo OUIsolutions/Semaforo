@@ -90,7 +90,7 @@ void save_locked_list(vector<LockedEntity> &listage,const char *storage_file){
 
 #ifdef DEBUG
     char *json_result = chash.dump_to_json_string(result);
-    dtw.write_string_file_content(json_result,storage_file);
+    dtw.write_string_file_content(storage_file,json_result);
     free(json_result);
 #else
     cJSON *parsed_cjson = chash.dump_to_cJSON(result);
@@ -105,6 +105,13 @@ void save_locked_list(vector<LockedEntity> &listage,const char *storage_file){
 
 
 }
+
+void save_mirrors(vector<LockedEntity> &listage,vector<string> &mirrors){
+    for(auto &m:mirrors){
+        save_locked_list(listage,m.c_str());
+    }
+}
+
 void print_locked_list(vector<LockedEntity> &listage){
     for(auto& entity : listage) {
         cout << entity;

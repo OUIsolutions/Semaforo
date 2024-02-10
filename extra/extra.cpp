@@ -19,3 +19,20 @@ string format_real_point(const char *stored_point){
     result << stored_point << "/real.json";
     return result.str();
 }
+
+vector<string> create_all_mirror_points(const char *stored_point){
+
+    vector<string> result;
+    result.reserve(TOTAL_MIRRORS);
+    for(int i = 0; i <  TOTAL_MIRRORS; i++){
+        result.emplace_back(format_mirror_point(stored_point,i));
+    }
+    return result;
+
+}
+
+void  lock_all_mirrors(DtwLocker *locker, vector<string> &mirrors){
+    for(auto &m : mirrors){
+        dtw.locker.lock(locker,m.c_str());
+    }
+}

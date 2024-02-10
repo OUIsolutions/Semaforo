@@ -13,6 +13,8 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
     bool first = true;
     string real_stored_file = format_real_point(storage_point);
     const char *real_stored_file_c =  real_stored_file.c_str();
+    vector<string> mirrors = create_all_mirror_points(storage_point);
+
 
     while (true){
         long now = time(nullptr);
@@ -24,12 +26,28 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         }
 
         first = false;
-        
+        DtwLocker *locker  = dtw.locker.newLocker();
+        vector<LockedEntity> test_locked_list;
+        string random_mirror = get_random_mirror_path(storage_point);
+        dtw.locker.lock(locker,random_mirror.c_str());
+        try{
+           test_locked_list = parse_locked_file(random_mirror.c_str());
+        }
+        catch (const std::exception& e) {
+            // Capturando e tratando a exceção
+            cerr  << e.what() << endl;
+            dtw.locker.free(locker);
+            return INVALID_STORAGE_FILE;
+        }
+
+        if (!its_able_to_lock(test_locked_list, entity)) {
+            dtw.locker.free(locker);
+            continue;
+        }
+
 
         //means its able to lock here
-        DtwLocker *locker  = dtw.locker.newLocker();
         locker->total_checks = TOTAL_CHECKS;
-
         dtw.locker.lock(locker, real_stored_file_c);
 
         vector<LockedEntity> locked_list;
@@ -51,10 +69,13 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
             continue;
         }
 
+        lock_all_mirrors(locker,mirrors);
         now = time(nullptr);
         long expiration = now + timeout;
         locked_list.emplace_back(entity, expiration);
         save_locked_list(locked_list, real_stored_file_c);
+
+        save_mirrors(locked_list,mirrors);
         dtw.locker.free(locker);
 
         return OK;
@@ -63,19 +84,24 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
 }
 
 
-int unlock_entity(const char *storage_file,const char *entity){
+int unlock_entity(const char *storage_point,const char *entity){
 
+    string real_stored_file = format_real_point(storage_point);
+    const char *real_stored_file_c =  real_stored_file.c_str();
+    vector<string> mirrors = create_all_mirror_points(storage_point);
 
 
     //means its able to lock here
     DtwLocker *locker  = dtw.locker.newLocker();
     locker->total_checks = TOTAL_CHECKS;
-    dtw.locker.lock(locker,storage_file);
+    dtw.locker.lock(locker,real_stored_file_c);
 
     vector<LockedEntity> final_locker;
+
     try{
-        final_locker = parse_locked_file(storage_file);
+        final_locker = parse_locked_file(real_stored_file_c);
     }
+
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
         cerr  << e.what() << endl;
@@ -90,8 +116,10 @@ int unlock_entity(const char *storage_file,const char *entity){
     }
     //remove the element at position index
     final_locker.erase(final_locker.begin() + position);
+    lock_all_mirrors(locker,mirrors);
 
-    save_locked_list(final_locker, storage_file);
+    save_locked_list(final_locker, real_stored_file_c);
+    save_mirrors(final_locker,mirrors);
     dtw.locker.free(locker);
     return OK;
 
