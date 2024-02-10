@@ -25,12 +25,20 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         }
 
         first = false;
-        DtwLocker *locker  = dtw.locker.newLocker();
-        //means its able to lock here
-        locker->total_checks = TOTAL_CHECKS;
+
+        DtwLocker *mirrow_locker = dtw.locker.newLocker();
+        mirrow_locker->max_wait = max_wait;
+        mirrow_locker->total_checks = TOTAL_CHECKS_FOR_MIRROWS;
         vector<LockedEntity> test_locked_list;
         string random_mirror = get_random_mirror_path(storage_point);
-        dtw.locker.lock(locker,random_mirror.c_str());
+
+
+        int mirrow_lock_result = dtw.locker.lock(mirrow_locker,random_mirror.c_str());
+        if(mirrow_lock_result == DTW_LOCKER_WAIT_ERROR){
+            cout << FILE_ITS_ALREADY_LOCKED << "\n";
+            dtw.locker.free(mirrow_locker);
+            return FILE_ITS_ALREADY_LOCKED_CODE;
+        }
 
         try{
            test_locked_list = parse_locked_file(random_mirror.c_str());
@@ -39,16 +47,21 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         catch (const std::exception& e) {
             // Capturando e tratando a exceção
             cerr  << e.what() << endl;
-            dtw.locker.free(locker);
+            dtw.locker.free(mirrow_locker);
             return INVALID_STORAGE_FILE;
         }
 
         if (!its_able_to_lock(test_locked_list, entity)) {
-            dtw.locker.free(locker);
+            dtw.locker.free(mirrow_locker);
             continue;
         }
-        dtw.locker.lock(locker, real_stored_file_c);
 
+
+        DtwLocker *locker  = dtw.locker.newLocker();
+        locker->max_wait = max_wait;
+        locker->total_checks = TOTAL_CHECKS;
+
+        dtw.locker.lock(locker, real_stored_file_c);
         vector<LockedEntity> locked_list;
         try{
             locked_list = parse_locked_file(real_stored_file_c);
@@ -57,6 +70,7 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
             // Capturando e tratando a exceção
             cerr  << e.what() << endl;
             dtw.locker.free(locker);
+            dtw.locker.free(mirrow_locker);
             return INVALID_STORAGE_FILE;
         }
 
@@ -65,10 +79,17 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
         //verify again after the storage has ben locked
         if(!its_able_to_lock(locked_list, entity)){
             dtw.locker.free(locker);
+            dtw.locker.free(mirrow_locker);
             continue;
         }
 
-        lock_all_mirrors(locker,mirrors);
+        int all_mirror_lock_result  = lock_all_mirrors(mirrow_locker,mirrors);
+        if(all_mirror_lock_result){
+            dtw.locker.free(locker);
+            dtw.locker.free(mirrow_locker);
+            continue;
+        }
+        
         now = time(nullptr);
         long expiration = now + timeout;
         locked_list.emplace_back(entity, expiration);
@@ -76,7 +97,7 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
 
         save_mirrors(locked_list,mirrors);
         dtw.locker.free(locker);
-
+        dtw.locker.free(mirrow_locker);
         return OK;
     }
 

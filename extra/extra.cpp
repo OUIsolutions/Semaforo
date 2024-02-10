@@ -31,8 +31,12 @@ vector<string> create_all_mirror_points(const char *stored_point){
 
 }
 
-void  lock_all_mirrors(DtwLocker *locker, vector<string> &mirrors){
+int  lock_all_mirrors(DtwLocker *locker, vector<string> &mirrors){
     for(auto &m : mirrors){
-        dtw.locker.lock(locker,m.c_str());
+        int result =    dtw.locker.lock(locker,m.c_str());
+        if(result == DTW_LOCKER_MAX_WAIT){
+            return DTW_LOCKER_MAX_WAIT;
+        }
     }
+
 }
