@@ -38,5 +38,6 @@ int  lock_all_mirrors(DtwLocker *locker, vector<string> &mirrors){
             return DTW_LOCKER_MAX_WAIT;
         }
     }
+    return OK;
 
 }

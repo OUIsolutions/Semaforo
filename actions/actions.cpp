@@ -17,6 +17,7 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
 
 
     while (true){
+
         long now = time(nullptr);
 
         if(start + max_wait <= now && !first){
@@ -82,14 +83,14 @@ int lock_entity(const char *storage_point, const char *entity, int max_wait, int
             dtw.locker.free(mirrow_locker);
             continue;
         }
-
         int all_mirror_lock_result  = lock_all_mirrors(mirrow_locker,mirrors);
         if(all_mirror_lock_result){
+
             dtw.locker.free(locker);
             dtw.locker.free(mirrow_locker);
             continue;
         }
-        
+
         now = time(nullptr);
         long expiration = now + timeout;
         locked_list.emplace_back(entity, expiration);
