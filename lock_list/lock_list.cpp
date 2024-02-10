@@ -56,6 +56,15 @@ vector<LockedEntity> parse_locked_file(const char *storage_file){
 
 
 }
+bool its_able_to_lock(vector<LockedEntity> &listage,const char *entity){
+
+    for(auto& current_entity : listage) {
+        if(current_entity.is_parent(entity)){
+            return  false;
+        }
+    }
+    return true;
+}
 
 void save_locked_list(vector<LockedEntity> &listage,const char *storage_file){
     CHashArray *result = newCHashArrayEmpty();
