@@ -17,7 +17,7 @@ def generate_list():
 
         if not itens:
             continue
-        
+
         for url in itens:
             formated_url = url.replace('/','').replace(' ','').replace(':','')
 
@@ -62,4 +62,8 @@ makedirs('listage',exist_ok=True)
 
 makedirs('result',exist_ok=True)
 
-generate_list()
+initial = Process(target=generate_list)
+initial.start()
+for i in range(0,2):
+    p = Process(target=cap_url)
+    p.start()
