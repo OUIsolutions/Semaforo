@@ -18,7 +18,7 @@ def generate_list():
             formated_url = url.replace('/','').replace(' ','').replace(':','')
 
             filename = f'listage/{formated_url}.txt'
-            system(f'./a.out  --action lock --entity {filename} ')
+            system(f'./a.out  --action lock --entity {filename}')
        
             with open(filename,'w') as arq:
                 arq.write(url)
@@ -35,6 +35,7 @@ def cap_url():
             lock_result =system(f'./a.out --wait 0 --action lock --entity {current_path}')
             if lock_result != 0:
                 continue
+
             with open(current_path,'r') as arq:
                 url = arq.read()
             content = requests.get(url)
@@ -57,6 +58,3 @@ makedirs('result',exist_ok=True)
 
 initial = Process(target=generate_list)
 initial.start()
-for x in range(0,2):
-    p = Process(target=cap_url)
-    p.start()
