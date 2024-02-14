@@ -27,6 +27,8 @@ class FileLock:
     def __exit__(self, exc_type, exc_value, traceback):
         system(f'./a.out --action unlock --entity {self.filename}')
         
+
+        
 def generate_list():
     while True:
         with open('new_teste.json', 'r') as arq:
@@ -55,19 +57,23 @@ def cap_url():
         for e in itens:
             current_path = f'listage/{e}'
 
-            with FileLock(current_path):
-                if not isfile(current_path):
-                    continue
+            try:
+                with FileLock(current_path,wait_time=0):
+                    if not isfile(current_path):
+                        continue
 
-                with open(current_path, 'r') as arq:
-                    url = arq.read()
+                    with open(current_path, 'r') as arq:
+                        url = arq.read()
 
-                content = requests.get(url)
-                formated_url = url.replace('/', '').replace(' ', '')
-                with open(f'result/{formated_url}', 'w') as arq:
-                    arq.write(content.text)
+                    content = requests.get(url)
+                    formated_url = url.replace('/', '').replace(' ', '')
+                    with open(f'result/{formated_url}', 'w') as arq:
+                        arq.write(content.text)
 
-                remove(current_path)
+                    remove(current_path)
+            except FileLockExeption as e:
+                continue
+
 
 if not isfile('new_teste.json'):
     with open('new_teste.json', 'w') as arq:
