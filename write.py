@@ -23,7 +23,6 @@ def generate_list():
             with open(filename,'w') as arq:
                 arq.write(url)
 
-            remove(filename)
             system(f'./a.out --action unlock --entity {filename}')
         with open('new_teste.json','w') as arq:
             arq.write('[]')
