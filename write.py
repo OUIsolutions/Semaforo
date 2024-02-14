@@ -20,12 +20,12 @@ class FileLock:
         self.timeout = timeout
 
     def __enter__(self):
-        result = system(f'./a.out --action lock --entity {self.filename} --wait {self.wait_time} --timeout {self.timeout}')
+        result = system(f'./a.out  --quiet true --action lock --entity {self.filename} --wait {self.wait_time} --timeout {self.timeout}')
         if result != 0:
             raise FileLockExeption(f'file {self.filename} its already locked')
     
     def __exit__(self, exc_type, exc_value, traceback):
-        system(f'./a.out --action unlock --entity {self.filename}')
+        system(f'./a.out  --quiet true  --action unlock --entity {self.filename}')
         
 
 
