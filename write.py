@@ -43,8 +43,9 @@ def cap_url():
             if lock_result != 0:
               continue
             if not isfile(current_path):
+                system(f'./a.out  --action unlock --entity {current_path}')
                 continue
-
+                    
             with open(current_path,'r') as arq:
                 url = arq.read()
             content = requests.get(url)
