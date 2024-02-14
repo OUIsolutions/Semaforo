@@ -8,13 +8,16 @@ from os.path import isfile
 from os.path import isdir
 from os import remove
 from os import listdir
+from json import JSONDecodeError
 def generate_list():
 
     while True:    
 
         with open('new_teste.json','r') as arq:
-            itens = json.loads(arq.read())
-
+            try:
+                itens = json.loads(arq.read())
+            except JSONDecodeError:
+                continue
         if not itens:
             continue
 
