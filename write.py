@@ -6,6 +6,7 @@ import json
 from os import makedirs
 from os.path import isfile
 from os.path import isdir
+from os import remove
 from os import listdir
 def generate_list():
 
@@ -21,7 +22,7 @@ def generate_list():
             
             with open(filename,'w') as arq:
                 arq.write(url)
-
+            remove(filename)
             system(f'./a.out --action unlock --entity {filename}')
 
         
@@ -37,6 +38,8 @@ def cap_url():
             formated_url = url.replace('/','').replace(' ','')
             with open(f'result/{formated_url}','w') as arq:
                 arq.write(content.text)
+            
+            
             system(f'./a.out -w 0 --action unlock --entity {current_path}')
 
         
