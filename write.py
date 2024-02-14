@@ -2,8 +2,8 @@ from multiprocessing import Process
 import requests
 import json
 from os import makedirs, remove
-from os.path import isfile, isdir, listdir
-from os import system
+from os.path import isfile, isdir
+from os import system, listdir
 from json import JSONDecodeError
 
 
@@ -28,7 +28,7 @@ class FileLock:
         system(f'./a.out --action unlock --entity {self.filename}')
         
 
-        
+
 def generate_list():
     while True:
         with open('new_teste.json', 'r') as arq:
