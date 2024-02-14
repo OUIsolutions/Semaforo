@@ -44,7 +44,7 @@ def cap_url():
             with open(f'result/{formated_url}','w') as arq:
                 arq.write(content.text)
             
-            
+            remove(current_path)
             system(f'./a.out  --action unlock --entity {current_path}')
 
         
