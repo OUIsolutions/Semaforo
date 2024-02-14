@@ -6,8 +6,9 @@ from os.path import isfile, isdir
 from os import system, listdir
 from json import JSONDecodeError
 
-FILE_ITS_ALREADY_LOCKED_CODE = 1
-INVALID_STORAGE_FILE = 3
+BASE_MUL = 256
+FILE_ITS_ALREADY_LOCKED_CODE = 1 *BASE_MUL
+INVALID_STORAGE_FILE = 3  *BASE_MUL
         
 
 class FIleIsAlreadyLocked (Exception):
@@ -40,9 +41,7 @@ class FileLock:
             raise InvalidStorageFile(self.storage_point)
         
         if result != 0:
-            print(result)
-
-            raise Exception('unexpected error')
+            raise Exception('Unexpected Error')
                 
         
     
@@ -53,9 +52,9 @@ class FileLock:
             raise InvalidStorageFile(self.storage_point)
         
         if result != 0:
-            print(result)
-            raise Exception('unexpected error')
+            raise Exception('Unexpected Error')
                 
+        
 
 
 def generate_list():
