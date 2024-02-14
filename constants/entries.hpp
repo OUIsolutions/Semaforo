@@ -28,7 +28,7 @@ const char  *STORAGE_DESCRIPTION = "the entity locks json to control what its be
 
 const char * DEFAULT_STORAGE_FILE = ".lock.json";
 
-
+const char * DEFAULT_QUIET= "false";
 const char *LOCK_ACTION = "lock";
 const char *UNLOCK_ACTION = "unlock";
 const char *RESSET_STORAGE  = "resset";

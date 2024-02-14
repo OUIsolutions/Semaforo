@@ -80,6 +80,7 @@ def cap_url():
 
             try:
                 with FileLock(current_path,wait_time=0):
+                    
                     if not isfile(current_path):
                         continue
 

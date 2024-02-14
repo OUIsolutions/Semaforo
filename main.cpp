@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
     dtw = newDtwNamespace();
 
     chash = newCHashNamespace();
-    parser.set_required<string>(QUIET_SHORT, QUIET_LONG, QUIET_DESCRIPTION);
+    parser.set_optional<string>(QUIET_SHORT, QUIET_LONG, DEFAULT_QUIET,QUIET_DESCRIPTION);
     parser.set_required<string>(ACTION_SHORT, ACTION_LONG, ACTION_DESCRIPTION);
     parser.set_optional<string>(STORAGE_SHORT, STORAGE_LONG, DEFAULT_STORAGE_FILE, STORAGE_DESCRIPTION);
     parser.set_optional<int>(TIMEOUT_SHORT, TIMEOUT_LONG, DEFAULT_TIME, TIMEOUT_DESCRIPTION);
