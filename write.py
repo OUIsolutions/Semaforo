@@ -14,6 +14,10 @@ def generate_list():
 
         with open('new_teste.json','r') as arq:
             itens = json.loads(arq.read())
+
+        if not itens:
+            continue
+        
         for url in itens:
             formated_url = url.replace('/','').replace(' ','').replace(':','')
 
@@ -24,6 +28,7 @@ def generate_list():
                 arq.write(url)
 
             system(f'./a.out --action unlock --entity {filename}')
+
         with open('new_teste.json','w') as arq:
             arq.write('[]')
 
