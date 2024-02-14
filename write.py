@@ -92,7 +92,7 @@ def cap_url():
                         arq.write(content.text)
 
                     remove(current_path)
-            except FileLockExeption as e:
+            except FIleIsAlreadyLocked as e:
                 continue
 
 
