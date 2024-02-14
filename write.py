@@ -18,7 +18,7 @@ def generate_list():
             formated_url = url.replace('/','').replace(' ','').replace(':','')
 
             filename = f'listage/{formated_url}.txt'
-            lock_result = system(f'./a.out -w 0 --action lock --entity {filename} --wait 0')
+            lock_result = system(f'./a.out --wait 0 --action lock --entity {filename} ')
             if lock_result != 0:
                 continue
             with open(filename,'w') as arq:
