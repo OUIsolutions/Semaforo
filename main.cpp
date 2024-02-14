@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
     dtw = newDtwNamespace();
 
     chash = newCHashNamespace();
-
+    parser.set_required<string>(QUIET_SHORT, QUIET_LONG, QUIET_DESCRIPTION);
     parser.set_required<string>(ACTION_SHORT, ACTION_LONG, ACTION_DESCRIPTION);
     parser.set_optional<string>(STORAGE_SHORT, STORAGE_LONG, DEFAULT_STORAGE_FILE, STORAGE_DESCRIPTION);
     parser.set_optional<int>(TIMEOUT_SHORT, TIMEOUT_LONG, DEFAULT_TIME, TIMEOUT_DESCRIPTION);
@@ -23,6 +23,8 @@ int main(int argc, char *argv[]){
 
     parser.run_and_exit_if_error();
 
+    string quiet_string = parser.get<string>(QUIET_SHORT);
+    bool quiet = quiet_string == "true" ? true:false;
 
     string storage = parser.get<string>(STORAGE_SHORT);
     string action = parser.get<string>(ACTION_SHORT);
@@ -40,7 +42,7 @@ int main(int argc, char *argv[]){
 
 
     if(action == RESSET_STORAGE){
-        return resset_storage(storage_c);
+        return resset_storage(quiet,storage_c);
     }
 
 
@@ -53,12 +55,12 @@ int main(int argc, char *argv[]){
 
     const char * entity_in_c =entity.c_str();
     if(action == UNLOCK_ACTION){
-        return unlock_entity(storage_c,entity_in_c);
+        return unlock_entity(quiet,storage_c,entity_in_c);
     }
 
 
     int timeout = parser.get<int>(TIMEOUT_SHORT);
     int wait = parser.get<int>(WAIT_SHORT);
 
-    return lock_entity(storage_c,entity_in_c,wait,timeout);
+    return lock_entity(quiet,storage_c,entity_in_c,wait,timeout);
 }

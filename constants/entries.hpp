@@ -1,6 +1,10 @@
 const char * TIMEOUT_SHORT = "t";
 const char *TIMEOUT_DESCRIPTION = "max time that current process can be with the ownership";
 
+const char *QUIET_SHORT = "q";
+const char *QUIET_LONG = "quiet";
+const char *QUIET_DESCRIPTION = "to make the apllication show nothing on terminal";
+
 const char *ACTION_SHORT = "a";
 const char *ACTION_LONG = "action";
 const char *ACTION_DESCRIPTION = "the action you will execute";

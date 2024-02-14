@@ -2,20 +2,23 @@
 // Created by mateusmoutinho on 09/02/24.
 //
 
-int resset_storage(const char *storage_file){
+int resset_storage(bool quiet,const char *storage_file){
     dtw.remove_any(storage_file);
     return OK;
 }
 
 
-int lock_entity(const char *storage_file, const char *entity,int max_wait,int timeout){
+int lock_entity(bool quiet,const char *storage_file, const char *entity,int max_wait,int timeout){
     long start = time(nullptr);
     bool first = true;
     while (true){
         long now = time(nullptr);
 
         if(start + max_wait <= now && !first){
-            cout << FILE_ITS_ALREADY_LOCKED << "\n";
+            if(!quiet){
+                cout << FILE_ITS_ALREADY_LOCKED << "\n";
+            }
+
             return FILE_ITS_ALREADY_LOCKED_CODE;
         }
 
@@ -28,7 +31,10 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
         locker->total_checks = TOTAL_CHECKS;
         locker->fail_delay =MAX_DELAY;
         if(dtw.locker.lock(locker,storage_file) == DTW_LOCKER_WAIT_ERROR){
-            cout << FILE_ITS_ALREADY_LOCKED << "\n";
+            if(!quiet){
+                cout << FILE_ITS_ALREADY_LOCKED << "\n";
+
+            }
             dtw.locker.free(locker);
             return FILE_ITS_ALREADY_LOCKED_CODE;
         };
@@ -40,7 +46,9 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
         }
         catch (const std::exception& e) {
             // Capturando e tratando a exceção
-            cerr  << e.what() << endl;
+            if(!quiet){
+                cerr  << e.what() << endl;
+            }
             dtw.locker.free(locker);
             return INVALID_STORAGE_FILE;
         }
@@ -63,9 +71,7 @@ int lock_entity(const char *storage_file, const char *entity,int max_wait,int ti
 }
 
 
-int unlock_entity(const char *storage_file,const char *entity){
-
-
+int unlock_entity(bool quiet,const char *storage_file,const char *entity){
 
     //means its able to lock here
     DtwLocker *locker  = dtw.locker.newLocker();
@@ -78,7 +84,10 @@ int unlock_entity(const char *storage_file,const char *entity){
     }
     catch (const std::exception& e) {
         // Capturando e tratando a exceção
-        cerr  << e.what() << endl;
+        if(!quiet){
+            cerr  << e.what() << endl;
+
+        }
         dtw.locker.free(locker);
         return INVALID_STORAGE_FILE;
     }
