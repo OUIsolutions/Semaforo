@@ -33,14 +33,17 @@ class FileLock:
     def __enter__(self):
         result = system(f'./a.out  --quiet true --action lock --entity {self.filename} --wait {self.wait_time} --timeout {self.timeout}')
 
-
-        print(result)
         if result == FILE_ITS_ALREADY_LOCKED_CODE:
             raise FIleIsAlreadyLocked(self.filename)
         
         if result == INVALID_STORAGE_FILE:
             raise InvalidStorageFile(self.storage_point)
         
+        if result != 0:
+            print(result)
+
+            raise Exception('unexpected error')
+                
         
     
     def __exit__(self, exc_type, exc_value, traceback):
@@ -49,6 +52,10 @@ class FileLock:
         if result == InvalidStorageFile:
             raise InvalidStorageFile(self.storage_point)
         
+        if result != 0:
+            print(result)
+            raise Exception('unexpected error')
+                
 
 
 def generate_list():
