@@ -33,11 +33,12 @@ class FileLock:
     def __enter__(self):
         result = system(f'./a.out  --quiet true --action lock --entity {self.filename} --wait {self.wait_time} --timeout {self.timeout}')
 
-    
+
+        print(result)
         if result == FILE_ITS_ALREADY_LOCKED_CODE:
             raise FIleIsAlreadyLocked(self.filename)
         
-        if result == InvalidStorageFile:
+        if result == INVALID_STORAGE_FILE:
             raise InvalidStorageFile(self.storage_point)
         
         
@@ -80,7 +81,7 @@ def cap_url():
 
             try:
                 with FileLock(current_path,wait_time=0):
-                    
+
                     if not isfile(current_path):
                         continue
 
