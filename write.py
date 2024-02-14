@@ -39,7 +39,10 @@ def cap_url():
         for e in itens:
             current_path = f'listage/{e}'
             lock_result =system(f'./a.out --wait 0 --action lock --entity {current_path}')
+
             if lock_result != 0:
+              continue
+            if not isfile(current_path):
                 continue
 
             with open(current_path,'r') as arq:
@@ -64,6 +67,6 @@ makedirs('result',exist_ok=True)
 
 initial = Process(target=generate_list)
 initial.start()
-for i in range(0,2):
+for i in range(0,10):
     p = Process(target=cap_url)
     p.start()
