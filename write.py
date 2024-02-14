@@ -13,15 +13,19 @@ def generate_list():
 
         with open('new_teste.json','r') as arq:
             itens = json.loads(arq.read())
-        for e in itens:
-            filename = f'listage/{e}.txt'
+        for url in itens:
+            formated_url = url.replace('/','').replace(' ','').replace(':','')
+
+            filename = f'listage/{formated_url}.txt'
             system(f'./a.out -w 0 --action lock --entity {filename}')
+            
             with open(filename,'w') as arq:
-                arq.write(e)
+                arq.write(url)
+
             system(f'./a.out --action unlock --entity {filename}')
 
         
-def cap_url(worker_id):
+def cap_url():
     while True:
         itens = listdir('listage')
         for e in itens:
@@ -47,7 +51,6 @@ makedirs('result',exist_ok=True)
 
 initial = Process(target=generate_list)
 initial.start()
-for i in range(0,2):
-    p = Process(target= cap_url)
+for x in range(0,2):
+    p = Process(target=cap_url)
     p.start()
-    
