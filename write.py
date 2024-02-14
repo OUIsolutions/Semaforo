@@ -25,6 +25,8 @@ def generate_list():
 
             remove(filename)
             system(f'./a.out --action unlock --entity {filename}')
+        with open('new_teste.json','w') as arq:
+            arq.write('[]')
 
         
 def cap_url():
@@ -56,5 +58,4 @@ makedirs('listage',exist_ok=True)
 
 makedirs('result',exist_ok=True)
 
-initial = Process(target=generate_list)
-initial.start()
+generate_list()
